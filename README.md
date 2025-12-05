@@ -1,0 +1,3 @@
+# Guac does Advent of Code 2025
+
+Hi! I told myself I'd do Advent of Code last year and didn't, so this year I'm gonna try to stay consistent. I'm catching up a little late since work has been busy, but I'm gonna do my best to solve these in Rust, a language I really want to properly learn. This'll be difficult, but I'm interested in learning. If I miss a day or two, it's likely because I had to focus on work/college apps.
