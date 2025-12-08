@@ -28,25 +28,41 @@ fn main() {
 fn find_invalid_ids(problem_data: String) {
     let mut result_number: usize = 0;
     println!("problem data: {}", problem_data);
-
-    let vec: Vec<&str> = problem_data.split(",").collect();
-    for value in vec {
+    let ranges: Vec<&str> = problem_data.split(',').collect();
+    for raw in ranges {
+        let value = raw.trim();
+        if value.is_empty() { continue; }
         println!("Range to examine: {}", value);
-        let id_range = String::from(value);
-        let range_indices: Vec<&str> = id_range.split("-").collect();
-        println!("First number: {}\nSecond number: {}\n", range_indices[0], range_indices[1]);
-        // convert to usable numbers (usize)
-        let first_number = range_indices[0].parse::<usize>().unwrap();
-        let last_number = String::from(range_indices[1]).parse::<usize>().unwrap();
+
+        let range_indices: Vec<&str> = value.split('-').collect();
+        if range_indices.len() != 2 {
+            eprintln!("Skipping malformed range: '{}'", value);
+            continue;
+        }
+
+        let first_str = range_indices[0].trim();
+        let second_str = range_indices[1].trim();
+        println!("First number: {}\nSecond number: {}\n", first_str, second_str);
+
+        let first_number = match first_str.parse::<usize>() {
+            Ok(n) => n,
+            Err(e) => { eprintln!("Invalid first number in '{}': {}", value, e); continue; }
+        };
+        let last_number = match second_str.parse::<usize>() {
+            Ok(n) => n,
+            Err(e) => { eprintln!("Invalid second number in '{}': {}", value, e); continue; }
+        };
 
         let mut counter = first_number; // set the counter to the first number in the range
 
         while counter <= last_number {
             // inclusive search of the range
-            if !validate_id(counter) { println!("[!!!] Invalid value: {}", counter); result_number += counter; }
+            if !validate_id(counter) {
+                println!("[!!!] Invalid value: {}", counter);
+                result_number = result_number.saturating_add(counter);
+            }
             counter += 1;
         }
-        
     }
 
     println!("The resulting number is: {}", result_number);
